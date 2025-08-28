@@ -20,10 +20,6 @@ public class BillingAddressEntity {
     @Column(name = "complement")
     private String complement;
 
-    // opcional
-    @OneToOne(mappedBy = "billingAddress")
-    private UserEntity user;
-
     public BillingAddressEntity() {
     }
 
@@ -57,13 +53,5 @@ public class BillingAddressEntity {
 
     public void setComplement(String complement) {
         this.complement = complement;
-    }
-
-    public UserEntity getUser() {
-        return user;
-    }
-
-    public void setUser(UserEntity user) {
-        this.user = user;
     }
 }
