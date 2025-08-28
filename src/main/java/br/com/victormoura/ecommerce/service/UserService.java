@@ -3,7 +3,6 @@ package br.com.victormoura.ecommerce.service;
 import br.com.victormoura.ecommerce.controller.dto.CreateUserDto;
 import br.com.victormoura.ecommerce.entity.BillingAddressEntity;
 import br.com.victormoura.ecommerce.entity.UserEntity;
-import br.com.victormoura.ecommerce.repository.BillingAddressRepository;
 import br.com.victormoura.ecommerce.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -14,12 +13,9 @@ import java.util.UUID;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final BillingAddressRepository billingAddressRepository;
 
-    public UserService(UserRepository userRepository,
-                       BillingAddressRepository billingAddressRepository) {
+    public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.billingAddressRepository = billingAddressRepository;
     }
 
     public UserEntity createUser(CreateUserDto dto) {
@@ -28,11 +24,10 @@ public class UserService {
         billingAddress.setAddress(dto.address());
         billingAddress.setNumber(dto.number());
         billingAddress.setComplement(dto.complement());
-        var savedBillingAddress = billingAddressRepository.save(billingAddress);
 
         var user = new UserEntity();
         user.setFullName(dto.fullName());
-        user.setBillingAddress(savedBillingAddress);
+        user.setBillingAddress(billingAddress);
 
         return userRepository.save(user);
     }
@@ -47,7 +42,6 @@ public class UserService {
 
         if (user.isPresent()) {
             userRepository.delete(user.get());
-            billingAddressRepository.deleteById(user.get().getBillingAddress().getBillingAddressId());
             return true;
         }
 
