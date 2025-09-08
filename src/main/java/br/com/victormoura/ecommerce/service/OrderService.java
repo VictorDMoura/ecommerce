@@ -2,11 +2,14 @@ package br.com.victormoura.ecommerce.service;
 
 import br.com.victormoura.ecommerce.controller.dto.CreateOrderDto;
 import br.com.victormoura.ecommerce.controller.dto.OrderItemDto;
+import br.com.victormoura.ecommerce.controller.dto.OrderSummaryDto;
 import br.com.victormoura.ecommerce.entity.*;
 import br.com.victormoura.ecommerce.exception.CreateOrderException;
 import br.com.victormoura.ecommerce.repository.OrderRepository;
 import br.com.victormoura.ecommerce.repository.ProductRepository;
 import br.com.victormoura.ecommerce.repository.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -89,4 +92,13 @@ public class OrderService {
 
     }
 
+    public Page<OrderSummaryDto> findAll(Integer page, Integer pageSize) {
+        return orderRepository.findAll(PageRequest.of(page, pageSize))
+                .map(entity -> {
+                    return new OrderSummaryDto(entity.getOrderId(),
+                            entity.getOrderDate(),
+                            entity.getUser().getUserId(),
+                            entity.getTotal());
+                });
+    }
 }
