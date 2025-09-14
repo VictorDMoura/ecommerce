@@ -1,9 +1,6 @@
 package br.com.victormoura.ecommerce.controller;
 
-import br.com.victormoura.ecommerce.controller.dto.ApiResponse;
-import br.com.victormoura.ecommerce.controller.dto.CreateOrderDto;
-import br.com.victormoura.ecommerce.controller.dto.OrderSummaryDto;
-import br.com.victormoura.ecommerce.controller.dto.PaginationResponseDto;
+import br.com.victormoura.ecommerce.controller.dto.*;
 import br.com.victormoura.ecommerce.service.OrderService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,4 +38,16 @@ public class OrderController {
                         new PaginationResponseDto(response.getNumber(), response.getSize(), response.getTotalElements(), response.getTotalPages())
                 ));
     }
+
+    @GetMapping("/{orderId}")
+    public ResponseEntity<OrderResponseDto> findbyId(@PathVariable("orderId") Long orderId) {
+
+        var order = orderService.findById(orderId);
+
+        return order.isPresent() ?
+                ResponseEntity.ok(OrderResponseDto.fromEntity(order.get())) :
+                ResponseEntity.notFound().build();
+    }
+
+
 }
